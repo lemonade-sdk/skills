@@ -10,11 +10,11 @@ on:
       routing:
         description: Routing Tests
         type: boolean
-        default: false
+        default: true
       behavioral:
         description: Behavioral Tests
         type: boolean
-        default: false
+        default: true
 
 permissions:
   contents: read
