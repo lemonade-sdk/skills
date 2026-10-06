@@ -32,9 +32,9 @@ jobs:
       skill_globs: skills/*
       routing_room: all
       infra_paths: .github/workflows/amd-skills-evals.yml
-      # Structural checks always run. Pull requests stop there; a dispatch
-      # adds whichever graded runs were ticked.
-      mode: ${{ github.event_name == 'workflow_dispatch' && (inputs.routing && inputs.behavioral && 'both' || inputs.routing && 'routing' || inputs.behavioral && 'behavioral') || 'references' }}
+      # Structural checks always run. Pull requests also run routing and
+      # behavioral; a dispatch runs whichever of them were ticked.
+      mode: ${{ github.event_name != 'workflow_dispatch' && 'both' || inputs.routing && inputs.behavioral && 'both' || inputs.routing && 'routing' || inputs.behavioral && 'behavioral' || 'references' }}
       api_key_secret: ""
       federation_rule_id: fdrl_01TZoKzi43MDt7ZDXsZrUCaC
       federation_organization_id: 9bdff596-1595-4140-8301-817e43ef8412
