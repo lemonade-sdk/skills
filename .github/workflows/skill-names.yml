@@ -1,0 +1,60 @@
+name: Skill Names
+
+# These skills are federated to github.com/amd/skills, so their names must
+# never change. A skill's name is both its folder under skills/ and the
+# `name:` field in its SKILL.md frontmatter.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Federated skill names unchanged
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check federated skill names
+        shell: bash
+        run: |
+          federated=(
+            lemonade-router-builder
+            local-ai-app-integration
+            local-ai-use
+          )
+
+          failed=0
+          for skill in "${federated[@]}"; do
+            file="skills/$skill/SKILL.md"
+            if [[ ! -f "$file" ]]; then
+              echo "::error file=$file::Federated skill '$skill' is missing. It may have been renamed or removed."
+              failed=1
+              continue
+            fi
+
+            name=$(awk '
+              { sub(/\r$/, "") }
+              NR == 1 && $0 != "---" { exit }
+              NR > 1 && $0 == "---" { exit }
+              /^name:/ { sub(/^name:[ \t]*/, ""); gsub(/["\047]/, ""); sub(/[ \t]+$/, ""); print; exit }
+            ' "$file")
+
+            if [[ "$name" != "$skill" ]]; then
+              echo "::error file=$file,line=2::Federated skill '$skill' has frontmatter name '${name:-<none>}'. It must stay '$skill'."
+              failed=1
+            else
+              echo "ok: $skill"
+            fi
+          done
+
+          if [[ $failed -ne 0 ]]; then
+            echo
+            echo "These skills are federated to github.com/amd/skills and must keep their names."
+            exit 1
+          fi
