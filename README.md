@@ -1,4 +1,4 @@
-# Lemonade Skills
+# 🍋 Lemonade Skills
 
 <div align="center">
 
