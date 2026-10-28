@@ -23,7 +23,6 @@ below are hand-written. When a sync reports new keys or types, update them too.
 - [Model capability requirements](#model-capability-requirements)
 - [Validation checklist](#validation-checklist)
 - [Registering, invoking, tracing](#registering-invoking-tracing)
-- [Router scope and limits](#router-scope-and-limits)
 - [Desktop-editor compatibility](#desktop-editor-compatibility)
 
 ---
