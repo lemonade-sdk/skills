@@ -1,4 +1,4 @@
-name: AMD Skills Checks
+name: AMD Skills Checks 🌩️
 
 on:
   pull_request:
@@ -35,6 +35,10 @@ jobs:
       # Structural checks always run. Pull requests also run routing.
       # A dispatch runs whichever of routing and behavioral were ticked.
       mode: ${{ github.event_name != 'workflow_dispatch' && 'routing' || inputs.routing && inputs.behavioral && 'both' || inputs.routing && 'routing' || inputs.behavioral && 'behavioral' || 'references' }}
+      # skillscope appends the platform (`Linux`) to these labels, and no
+      # GitHub-hosted runner carries an OS label, so behavioral legs need the
+      # self-hosted pool.
+      behavior_runner: '["self-hosted", "X64", "lemon-prod"]'
       api_key_secret: ""
       federation_rule_id: fdrl_01TZoKzi43MDt7ZDXsZrUCaC
       federation_organization_id: 9bdff596-1595-4140-8301-817e43ef8412
