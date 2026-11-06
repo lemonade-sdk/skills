@@ -71,6 +71,48 @@
       ]
     },
     {
+      "id": "zero-shot-topic-router",
+      "skill_should_trigger": true,
+      "prompt": "Use LFM2.5-Encoder-350M-Prompt-Router-ONNX as a zero-shot classifier: hard reasoning or coding questions go to fireworks.kimi-k2p6, everything else stays on Qwen3.5-9B-GGUF.",
+      "expected_behavior": [
+        "Declare a classifier with type zero_shot whose model is LFM2.5-Encoder-350M-Prompt-Router-ONNX",
+        "Give the zero_shot classifier a labels array of descriptive phrases written by the author (not LABEL_0/LABEL_1 style ids)",
+        "Reference one of those labels in a rule that routes to fireworks.kimi-k2p6",
+        "Set Qwen3.5-9B-GGUF as default_model",
+        "Run the offline validator scripts/validate.py and report it passed",
+        "Tell the user the policy cannot be imported into the desktop Hybrid Router editor"
+      ],
+      "unexpected_behavior": [
+        "Use type classifier, llm, or semantic_similarity for the LFM2.5 prompt router",
+        "Put a prompt or reference_phrases key on the zero_shot classifier",
+        "Execute any live Lemonade server API call by making an actual HTTP call with a tool"
+      ],
+      "files_exist": [
+        "router.json"
+      ]
+    },
+    {
+      "id": "systemone-decision-router",
+      "skill_should_trigger": true,
+      "prompt": "Use the Laya-GGUF decision model to ask whether the customer is angry; angry customers go to Qwen3.5-9B-GGUF, and also route anything Laya says is a billing issue (options: billing, shipping, technical) to Qwen3.5-9B-GGUF. Everything else goes to Qwen3.5-2B-GGUF.",
+      "expected_behavior": [
+        "Declare classifiers with type systemone whose model is Laya-GGUF, each with a question object",
+        "Use a noul question for the angry check and match it with label true",
+        "Use a choice question whose criteria is an array (not an object) containing billing, shipping and technical",
+        "Omit labels on the systemone classifiers, since the question's options are the labels",
+        "Set Qwen3.5-2B-GGUF as default_model",
+        "Run the offline validator scripts/validate.py and report it passed"
+      ],
+      "unexpected_behavior": [
+        "Write the choice criteria as an object such as {\"billing\": null, ...} inside router.json",
+        "Use type llm with a chat model instead of systemone",
+        "Execute any live Lemonade server API call by making an actual HTTP call with a tool"
+      ],
+      "files_exist": [
+        "router.json"
+      ]
+    },
+    {
       "id": "nginx-load-balance",
       "skill_should_trigger": false,
       "prompt": "Set up nginx to load-balance incoming requests across three backend servers."
