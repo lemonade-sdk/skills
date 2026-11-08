@@ -285,11 +285,17 @@ any referenced model that is not declared here.
 
 These two actions are a single mandatory step. Do not stop between them.
 
-**8a. Run the offline validator** before presenting anything to the user:
+**Write the policy to `router.json` in the user's current working directory**
+(unless they named another path) - never inside this skill's folder. Do not
+`cd` into the skill folder; call the validator by its path instead.
+
+**8a. Run the offline validator** before presenting anything to the user,
+from the working directory, with `<skill-dir>` = the folder holding this
+`SKILL.md`:
 
 ```bash
-python scripts/validate.py router.json    # Windows
-python3 scripts/validate.py router.json   # macOS/Linux
+python <skill-dir>/scripts/validate.py router.json    # Windows
+python3 <skill-dir>/scripts/validate.py router.json   # macOS/Linux
 ```
 
 It exits 0 with `"ready": true` when there are no errors. If it reports
@@ -305,6 +311,12 @@ Lemonade docs support, the copy is stale - run
 (fetches from GitHub) and re-validate, rather than editing the policy around
 it. A `schema_drift` warning means the schema has a constraint the validator
 can't check; rely on the server-side check in 8b.
+
+**If the policy has a `zero_shot` or `systemone` classifier, or any
+`on_truncation` field, your reply to the user must say in plain words that
+the desktop app's Hybrid Router editor cannot import this policy** - it is
+JSON-only, so register it with `/pull` and edit the file directly. This is
+mandatory; don't leave it to the reference docs.
 
 **8b. Immediately after validation passes, print these curl commands**
 as plain text for the user to copy and run. This is not optional. Fill in
